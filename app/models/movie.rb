@@ -6,5 +6,4 @@ class Movie < ActiveRecord::Base
     Movie.where(rating: ratings)
   end
 
-
 end

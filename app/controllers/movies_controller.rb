@@ -7,19 +7,65 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @ratings = Movie.class_variable_get(:@@all_ratings)
+    
     @all_ratings = Movie.class_variable_get(:@@all_ratings)
-    if params[:sort] == 'sort_by_title'
-      @movies = Movie.order('title')
-    elsif params[:sort] == 'sort_by_release'
-      @movies = Movie.order('release_date')
+    if !session.has_key?(:ratings)
+      @ratings = Movie.class_variable_get(:@@all_ratings)
     else
-      #@movies = Movie.all
-      if params.has_key?('ratings')
-        @ratings = params['ratings'].keys
-      end
-      @movies = Movie.with_ratings(@ratings)    
+      @ratings = session[:ratings]
     end
+
+    if params[:sort] == 'sort_by_release' or params[:sort] == 'sort_by_title'
+      session[:sort] = params[:sort]
+    end
+
+    if params.has_key?(:ratings)
+      if @ratings.length > 0
+        @ratings = params['ratings'].keys()
+        session[:ratings] = @ratings
+      else
+        @ratings = session[:ratings]
+      end
+    end
+
+    if !session.has_key?(:ratings)
+      session[:ratings] = @ratings
+    end
+
+    if session[:sort] == 'sort_by_release'
+      @movies = Movie.with_ratings(@ratings).order('release_date')
+    elsif session[:sort] == 'sort_by_title'
+      @movies = Movie.with_ratings(@ratings).order('title')
+    else
+      @movies = Movie.with_ratings(@ratings)
+    end
+
+    #if !session.has_key?('ratings')
+    #  session[:ratings] = @all_ratings
+    #end
+    #if !session.has_key?(:sort)
+    #  session[:sort] == nil
+    #  @movies = Movie.with_ratings(@ratings)
+    #elsif session[:sort] == 'sort_by_release'
+    #  @movies = Movie.order('release_date').with_ratings(@ratings)
+    #elsif session[:sort] == 'sort_by_title'
+    #  @movies = Movie.order('title').with_ratings(@ratings)
+    #else
+    #  @movies = Movie.with_ratings(@ratings)
+    #end
+    #if params[:sort] == 'sort_by_title' or params[:sort] == 'sort_by_release'
+    #  session[:sort] = params[:sort]
+    #end
+
+    #elsif params[:sort] == 'sort_by_release'
+    #  @movies = Movie.order('release_date')
+    #else
+    #  #@movies = Movie.all
+    #  if params.has_key?('ratings')
+    #    @ratings = params['ratings'].keys
+    #  end
+     # @movies = Movie.with_ratings(@ratings)    
+    #end
   end
 
   def new
