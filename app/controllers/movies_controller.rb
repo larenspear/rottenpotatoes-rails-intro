@@ -39,33 +39,6 @@ class MoviesController < ApplicationController
     else
       @movies = Movie.with_ratings(@ratings)
     end
-
-    #if !session.has_key?('ratings')
-    #  session[:ratings] = @all_ratings
-    #end
-    #if !session.has_key?(:sort)
-    #  session[:sort] == nil
-    #  @movies = Movie.with_ratings(@ratings)
-    #elsif session[:sort] == 'sort_by_release'
-    #  @movies = Movie.order('release_date').with_ratings(@ratings)
-    #elsif session[:sort] == 'sort_by_title'
-    #  @movies = Movie.order('title').with_ratings(@ratings)
-    #else
-    #  @movies = Movie.with_ratings(@ratings)
-    #end
-    #if params[:sort] == 'sort_by_title' or params[:sort] == 'sort_by_release'
-    #  session[:sort] = params[:sort]
-    #end
-
-    #elsif params[:sort] == 'sort_by_release'
-    #  @movies = Movie.order('release_date')
-    #else
-    #  #@movies = Movie.all
-    #  if params.has_key?('ratings')
-    #    @ratings = params['ratings'].keys
-    #  end
-     # @movies = Movie.with_ratings(@ratings)    
-    #end
   end
 
   def new
